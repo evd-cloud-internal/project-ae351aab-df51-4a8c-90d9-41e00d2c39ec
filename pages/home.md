@@ -354,9 +354,9 @@ ORDER BY month
 ```sql pricing_by_property
 SELECT
     property_name,
-    avg(demanded_price) as avg_demanded_price,
-    avg(market_price) as avg_market_price,
-    avg(demanded_price) - avg(market_price) as avg_price_diff,
+    avg(demanded_price / number_of_shares) as avg_demanded_price,
+    avg(market_price / number_of_shares) as avg_market_price,
+    avg(demanded_price / number_of_shares) - avg(market_price / number_of_shares) as avg_price_diff,
     countIf(price_comparison = 'Above Market Price') as above_market,
     countIf(price_comparison = 'At Market Price') as at_market,
     countIf(price_comparison = 'Below Market Price') as below_market
@@ -375,9 +375,9 @@ ORDER BY avg_price_diff DESC
     page_size=15
 %}
     {% dimension value="property_name" title="Property" /%}
-    {% measure value="avg(avg_demanded_price)" title="Avg Demanded Price" fmt="#,##0' EGP'" info="AVG(demanded_price) for Listed/Sold requests." /%}
-    {% measure value="avg(avg_market_price)" title="Avg Market Price" fmt="#,##0' EGP'" info="AVG(market_price) for Listed/Sold requests." /%}
-    {% measure value="avg(avg_price_diff)" title="Avg Price Diff" fmt="#,##0' EGP'" info="AVG(demanded_price) - AVG(market_price). Positive = above market, negative = below market." /%}
+    {% measure value="avg(avg_demanded_price)" title="Avg Demanded Price / Share" fmt="#,##0' EGP'" info="AVG(demanded_price / number_of_shares) for Listed/Sold requests. Per-share price." /%}
+    {% measure value="avg(avg_market_price)" title="Avg Market Price / Share" fmt="#,##0' EGP'" info="AVG(market_price / number_of_shares) for Listed/Sold requests. Per-share price." /%}
+    {% measure value="avg(avg_price_diff)" title="Avg Price Diff / Share" fmt="#,##0' EGP'" info="AVG(demanded_price / shares) - AVG(market_price / shares). Positive = above market, negative = below market. Per-share difference." /%}
     {% measure value="sum(above_market)" title="Above Market" fmt="num0" info="Count of requests priced above market price." /%}
     {% measure value="sum(at_market)" title="At Market" fmt="num0" info="Count of requests priced at market price." /%}
     {% measure value="sum(below_market)" title="Below Market" fmt="num0" info="Count of requests priced below market price." /%}
